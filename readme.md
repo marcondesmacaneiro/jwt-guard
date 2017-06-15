@@ -8,12 +8,12 @@ Begin by installing this package through Composer.
 
 You can run:
 
-    composer require paulvl/jwt-guard 0.*
+    composer require paulvl/jwt-guard 1.*
 
 Or edit your project's composer.json file to require paulvl/jwt-guard.
 ```
     "require": {
-        "paulvl/jwt-guard": "0.*"
+        "paulvl/jwt-guard": "1.*"
     }
 ```
 Next, update Composer from the Terminal:
@@ -51,7 +51,7 @@ To start using JWT drive you need to create anew guard on `config/auth.php` file
 ```
 You can use any `Eloquent` provider that you want.
 
-###**Using JWT Guard**
+### **Using JWT Guard**
 
 ####**attempt**
 
@@ -66,24 +66,47 @@ You can use any `Eloquent` provider that you want.
 ```
 
 
-####**blacklistToken**
+#### **blacklistToken**
 
 ```
 	//this will blacklist current jwt-token and referenced refresh token if exists
 	return Auth::guard('jwt')->blacklistToken();
 ```
 
+### **Using Auth JWT Middleware**
 
-###**Using JWT Middleware**
-
-if you need to validate JWT token request just add `Paulvl\JWTGuard\Auth\Middleware\AuthenticateJwt::class` to `routeMiddleware` on `Http/Kernel.php` file:
+if you need to validate Authentication using JWT token request just add `Paulvl\JWTGuard\Auth\Middleware\AuthenticateJwt::class` to `routeMiddleware` on `Http/Kernel.php` file:
 
 ```
 protected $routeMiddleware = [
-        ...
-        'auth-jwt' => \Paulvl\JWTGuard\Auth\Middleware\AuthenticateJwt::class,
-        ...
-    ];
+    ...
+    'auth-jwt' => \Paulvl\JWTGuard\Auth\Middleware\AuthenticateJwt::class,
+    ...
+];
+```
+
+### **Using Refresh JWT Middleware**
+
+if you need to validate a Refresh JWT token request just add `Paulvl\JWTGuard\Auth\Middleware\RefreshJwt::class` to `routeMiddleware` on `Http/Kernel.php` file:
+
+```
+protected $routeMiddleware = [
+    ...
+    'refresh-jwt' => \Paulvl\JWTGuard\Auth\Middleware\RefreshJwt::class,
+    ...
+];
+```
+
+### **Using Prebuild Controller**
+
+JWT-Guard includes a prebuild controller that will handle Login, Token Refreshing and Blacklisting for you. Just add this to your routes file:
+
+```
+Route::post('/jwt/login', '\Paulvl\JWTGuard\Http\Controllers\Auth\LoginController@login')->name('jwt.login');
+
+Route::post('/jwt/refresh', '\Paulvl\JWTGuard\Http\Controllers\Auth\LoginController@refresh')->name('jwt.refresh');
+
+Route::post('/jwt/blacklist', '\Paulvl\JWTGuard\Http\Controllers\Auth\LoginController@blacklist')->name('jwt.blacklist');
 ```
 
 ## **Contribute and share ;-)**

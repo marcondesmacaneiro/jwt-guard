@@ -2,8 +2,6 @@
 
 namespace Paulvl\JWTGuard\Support;
 
-
-
 class Serializer
 {
     private $key;

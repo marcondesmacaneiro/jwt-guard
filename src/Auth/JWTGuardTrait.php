@@ -4,9 +4,9 @@ namespace Paulvl\JWTGuard\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Paulvl\JWTGuard\JWT\Token\TokenInterface;
 use Paulvl\JWTGuard\JWT\Token\CommonJWT;
 use Paulvl\JWTGuard\JWT\Token\RefreshJWT;
-use Paulvl\JWTGuard\JWT\Token\UserJWT;
 use Paulvl\JWTGuard\JWT\Token\ErrorToken;
 
 trait JWTGuardTrait
@@ -82,7 +82,7 @@ trait JWTGuardTrait
 
     public function tokenIsApi()
     {
-        return $this->token() instanceof CommonJWT || $this->token() instanceof UserJWT;
+        return $this->token() instanceof CommonJWT;
     }
 
     public function tokenIsRefresh()
@@ -121,24 +121,24 @@ trait JWTGuardTrait
         $tokenStatus = $this->jwtManager->validateToken($this->token());
 
         switch ($tokenStatus) {
-            case UserJWT::BEFORE_VALID_TOKEN:
+            case TokenInterface::BEFORE_VALID_TOKEN:
                 $errors['code'] = 403;
                 $errors['message'] = 'Token can not be used yet.';
                 break;
-            case UserJWT::EXPIRED_TOKEN:
+            case TokenInterface::EXPIRED_TOKEN:
                 $errors['code'] = 401;
                 $errors['message'] = 'Token is expired.';
                 break;
-            case UserJWT::DOMAIN_INVALID_TOKEN:
-                $errors['code'] = 422;
+            case TokenInterface::DOMAIN_INVALID_TOKEN:
+                $errors['code'] = 401;
                 $errors['message'] = 'Token is invalid.';
                 break;
-            case UserJWT::SIGNATURE_INVALID_TOKEN:
-                $errors['code'] = 422;
+            case TokenInterface::SIGNATURE_INVALID_TOKEN:
+                $errors['code'] = 401;
                 $errors['message'] = 'Token is invalid.';
                 break;
-            case UserJWT::BLACKLISTED_TOKEN:
-                $errors['code'] = 422;
+            case TokenInterface::BLACKLISTED_TOKEN:
+                $errors['code'] = 401;
                 $errors['message'] = 'Token is invalid.';
                 break;
         }
@@ -181,21 +181,7 @@ trait JWTGuardTrait
                 return $this->issueToken($user);
             }
 
-            if ($this->request->ajax() || $this->request->wantsJson()) {
-                return response()->json(
-                    'Credentials are OK.',
-                    200
-                );
-            }
-
             return true;
-        }
-
-        if ($this->request->ajax() || $this->request->wantsJson()) {
-            return response()->json(
-                'Invalid credentials.',
-                422
-            );
         }
 
         return false;
@@ -228,6 +214,6 @@ trait JWTGuardTrait
 
     public function issueToken(AuthenticatableContract $user)
     {
-        return $this->jwtManager->issue(['user' => $user->toArray()]);
+        return $this->jwtManager->issue(['user_id' => $user->id]);
     }
 }

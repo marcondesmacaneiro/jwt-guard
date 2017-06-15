@@ -63,15 +63,15 @@ trait TokenTrait
     public function getMandatoryClaims($duration)
     {
         $iat = Carbon::now()->timestamp;
-        $jti = uniqid(str_random(random_int(3,33)), true);
+        $jti = uniqid(str_random(random_int(8,33)), true);
 
         return array(
-            //"iss" => "http://example.org",
-            //"aud" => "http://example.xyz",
+            "jti"   => $jti,
             "iat"   => $iat,
             "nbf"   => $iat,
             "exp"   => $iat + $duration,
-            "jti"   => $jti
+            //"iss" => "http://example.org",
+            //"aud" => "http://example.xyz",
         );
     }
 

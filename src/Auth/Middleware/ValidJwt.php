@@ -6,9 +6,8 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use Paulvl\JWTGuard\Auth\JWTGuard;
 
-class AuthenticateJwt
+class ValidJwt
 {
-    protected $inputKey = 'api_token';
     /**
      * Handle an incoming request.
      *
@@ -17,20 +16,20 @@ class AuthenticateJwt
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = 'jwt', $tokenType = 'api_token')
+    public function handle($request, Closure $next, $tokenType = 'api_token', $guard = 'jwt')
     {
         if ($request->ajax() || $request->wantsJson()) {
             if (($errors = Auth::guard($guard)->validateToken($tokenType)) === true ) {
                 if (Auth::guard($guard)->tokenIsApi()) {
-                    if (Auth::guard('jwt')->guest()) {
+                    if (Auth::guard($guard)->guest()) {
                         return response()->json('Unauthorized.', 401);
                     }
                 }
             } else {
-                return response()->json($errors['message'], $errors['code']);
+                return response()->json(['error' => $errors['message']], $errors['code']);
             }
         } else {
-            return response()->json('Request must accept a json response.', 422);
+            return response()->json(['error' =>'Request must accept a json response.'], 422);
         }
 
         return $next($request);

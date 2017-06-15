@@ -45,6 +45,6 @@ return [
     |
     */
 
-    'refresh_token_duration' => 14
+    'refresh_token_duration' => 14,
 
 ];

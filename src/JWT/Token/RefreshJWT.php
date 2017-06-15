@@ -29,8 +29,10 @@ class RefreshJWT implements TokenInterface
         if (!$this->isBlacklisted()) {
             $expiresAt = Carbon::createFromTimestamp($this->get()->exp);
             Cache::put($this->jti(), $this->jti(), $expiresAt);
-            $referenceTokenExpiresAt = Carbon::createFromTimestamp($this->nbf());
-            Cache::put($this->rtt(), $this->rtt(), $referenceTokenExpiresAt);
+            if (is_null(Cache::get($this->rtt()))) {
+                $referenceTokenExpiresAt = Carbon::createFromTimestamp($this->nbf());
+                Cache::put($this->rtt(), $this->rtt(), $referenceTokenExpiresAt);
+            }
             $this->status = self::BLACKLISTED_TOKEN;
         }
     }
