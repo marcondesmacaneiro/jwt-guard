@@ -2,6 +2,8 @@
 
 JWT-Guard is a Laravel package that allow authentication and authorization as a guard driver using JWT tokens.
 
+[![Latest Stable Version](https://poser.pugx.org/paulvl/jwt-guard/v/stable)](https://packagist.org/packages/paulvl/jwt-guard) [![Latest Unstable Version](https://poser.pugx.org/paulvl/jwt-guard/v/unstable)](https://packagist.org/packages/paulvl/jwt-guard) [![License](https://poser.pugx.org/paulvl/jwt-guard/license)](https://packagist.org/packages/paulvl/jwt-guard) [![Total Downloads](https://poser.pugx.org/paulvl/jwt-guard/downloads)](https://packagist.org/packages/paulvl/jwt-guard)
+
 ## **Quick Installation**
 
 Begin by installing this package through Composer.
@@ -56,21 +58,21 @@ You can use any `Eloquent` provider that you want.
 ####**attempt**
 
 ```
-	// Assuming you retrieve your credentials from request
-	$credentials = [
-		'email' => 'test@example.com',
-		'password' => 'password'
-	];
-	//this will return a token array
-	return Auth::guard('jwt')->attempt($credentials);
+    // Assuming you retrieve your credentials from request
+    $credentials = [
+        'email' => 'test@example.com',
+        'password' => 'password'
+    ];
+    //this will return a token array
+    return Auth::guard('jwt')->attempt($credentials);
 ```
 
 
 #### **blacklistToken**
 
 ```
-	//this will blacklist current jwt-token and referenced refresh token if exists
-	return Auth::guard('jwt')->blacklistToken();
+    //this will blacklist current jwt-token and referenced refresh token if exists
+    return Auth::guard('jwt')->blacklistToken();
 ```
 
 ### **Using Auth JWT Middleware**
