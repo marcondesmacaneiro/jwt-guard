@@ -141,6 +141,10 @@ trait JWTGuardTrait
                 $errors['code'] = 401;
                 $errors['message'] = 'Token is invalid.';
                 break;
+            case null:
+                $errors['code'] = 401;
+                $errors['message'] = 'Unauthenticated.';
+                break;
         }
 
         return empty($errors) ? true : $errors;
