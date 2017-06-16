@@ -75,28 +75,32 @@ You can use any `Eloquent` provider that you want.
     return Auth::guard('jwt')->blacklistToken();
 ```
 
-### **Using Auth JWT Middleware**
+### **Using Valid JWT Middleware**
 
-if you need to validate Authentication using JWT token request just add `Paulvl\JWTGuard\Auth\Middleware\AuthenticateJwt::class` to `routeMiddleware` on `Http/Kernel.php` file:
-
-```
-protected $routeMiddleware = [
-    ...
-    'auth-jwt' => \Paulvl\JWTGuard\Auth\Middleware\AuthenticateJwt::class,
-    ...
-];
-```
-
-### **Using Refresh JWT Middleware**
-
-if you need to validate a Refresh JWT token request just add `Paulvl\JWTGuard\Auth\Middleware\RefreshJwt::class` to `routeMiddleware` on `Http/Kernel.php` file:
+if you need to validate Authentication using JWT token request just add `Paulvl\JWTGuard\Auth\Middleware\ValidJwt::class` to `routeMiddleware` on `Http/Kernel.php` file:
 
 ```
 protected $routeMiddleware = [
     ...
-    'refresh-jwt' => \Paulvl\JWTGuard\Auth\Middleware\RefreshJwt::class,
+    'valid-jwt' => \Paulvl\JWTGuard\Auth\Middleware\ValidJwt::class,
     ...
 ];
+```
+
+then if you need to verify a valid jwt-token
+
+```
+Route::middleware('valid-jwt:api_token')->get('/your-route', function (Request $request) {
+    // any thing tha you need to protect
+});
+```
+
+or if you need to verify a valid refresh-token
+
+```
+Route::middleware('valid-jwt:refresh_token')->get('/your-route', function (Request $request) {
+    // your refresh action for example
+});
 ```
 
 ### **Using Prebuild Controller**
