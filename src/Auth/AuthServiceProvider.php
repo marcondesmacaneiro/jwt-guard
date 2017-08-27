@@ -32,7 +32,12 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app->bind('jwt-auth-manager', function()
         {
-            return new JWTManager(config('jwt.secret_key'));
+            return new JWTManager(
+                config('jwt.secret_key'),
+                config('jwt.jwt_token_duration'),
+                config('jwt.enable_refresh_token'),
+                config('jwt.refresh_token_duration')
+            );
         });
 
         $this->app->bind('jwt-auth-serializer', function()
